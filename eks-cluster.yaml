@@ -1,0 +1,52 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: drex-prod-cluster
+  region: us-east-1
+  version: "1.34" 
+
+# --- ADDONS SECTION ---
+addons:
+  - name: vpc-cni
+    version: latest
+  - name: kube-proxy
+    version: latest
+  - name: coredns
+    version: latest
+  - name: aws-ebs-csi-driver
+    wellKnownPolicies:
+      ebsCSIController: true
+  - name: aws-efs-csi-driver # Shared storage for Data Science/Multi-pod access
+    wellKnownPolicies:
+      efsCSIController: true
+
+iam:
+  withOIDC: true # Required for IAM Roles for Service Accounts (IRSA)
+
+vpc:
+  clusterEndpoints:
+    publicAccess: true
+    privateAccess: true
+
+managedNodeGroups:
+  - name: standard-workers
+    instanceType: t3a.medium
+    minSize: 2
+    maxSize: 5
+    desiredCapacity: 3
+    volumeSize: 50
+    #ssh:
+      #allow: true # Uses your default SSH key
+    labels:
+      role: worker
+    tags:
+      Environment: Production
+
+  #Spot nodes for cost savings (ideal for Data Science/Batch jobs)
+  - name: spot-workers
+    instanceTypes: ["t3.medium", "t3.large"]
+    spot: true
+    minSize: 0
+    maxSize: 10
+    desiredCapacity: 2
