@@ -7,16 +7,21 @@ This repository contains the Infrastructure as Code (IaC) configuration and mani
 
 ## 📋 Prerequisites & Local Setup
 Before deploying the cluster, ensure your local workspace meets the following requirements:
-* **AWS CLI (v2):** Installed and configured with appropriate IAM permissions (AdministratorAccess or equivalent EKS/VPC/IAM rights).
-
+* **AWS CLI (v2):** Install and configure with appropriate IAM permissions (AdministratorAccess or equivalent EKS/VPC/IAM rights).
 ```bash
 aws configure
+```
+```bash
 aws sts get-caller-identity
 ```
-* **eksctl:** Installed on your local machine to parse the manifest and deploy CloudFormation stacks.
-
-* **kubectl:** Installed to manage Kubernetes resources after the control plane is live.
-
+* **eksctl:** Install on your local machine to parse the manifest and deploy CloudFormation stacks.
+```bash
+winget install -e --id eksctl.eksctl
+```
+* **kubectl:** Install to manage Kubernetes resources after the control plane is live.
+```bash
+winget install -e --id Kubernetes.kubectl
+```
 * **SSH Key Pair:** An RSA key pair generated on your local machine (`~/.ssh/id_rsa.pub` or Windows equivalent) to enable SSH access to worker nodes.
 
 ```bash
